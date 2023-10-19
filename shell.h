@@ -33,5 +33,9 @@ int printEcho(char **param);
 int _strncmp(const char *s1, const char *s2, size_t l);
 char *_getenv(char *param);
 int echoSpecial(char **comm, int a);
+char ReadChar(void);
+int isSpaceChar(char c, int index, char prebuff);
+char *resizeBuffer(char *buffer, int *currentSize);
+
 
 #endif

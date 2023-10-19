@@ -1,61 +1,63 @@
 #include "shell.h"
+#include <stdlib.h>
+#include <unistd.h>
 
 /**
- * _getline - gets string line from stdin file
+ * ReadChar: Reads a character
+ *           from the standard input.
  *
- * Return: Read string with null pointer
+ * @return  character(success).
  */
 
-char *_getLine()
+char ReadChar(void)
 {
-	char *buffer = NULL;
-	int i = 0, x = 0, buffersize = BUFSIZE;
-	char c = 0, prebuf = '\0';
+	char c = 0;
 
-	buffer = malloc(BUFSIZE);
-	if (!buffer)
-	{
-		free(buffer);
-		return (NULL);
-	}
+	fflush(stdin);
+	read(STDIN_FILENO, &c, 1);
+	return (c);
+}
 
-	for (; c != EOF && c != '\n'; i++)
-	{
-		fflush(stdin);
-		x = read(STDIN_FILENO, &c, 1);
-		if (x == 0)
-		{
-			free(buffer);
-			exit(EXIT_SUCCESS);
-		}
+/**
+ * isSpaceChar:  checks if the character is a space character
+ *                  and handles special cases.
+ * @c: The character to check.
+ * @index: The current index in the buffer.
+ * @prebuff: The previous character in the buffer.
+ *
+ * @return: 1 (success), 0 otherwise.
+ */
 
-		if ((c == ' ' && i == 0) || (c == ' ' && prebuf == ' '))
-			i--;
-		else
-		{
-			buffer[i] = c;
-			if (i >= buffersize)
-			{
-				buffer = realloc(buffer, (BUFSIZE + 2));
-				if (!buffer)
-				{
-					free(buffer);
-					return (NULL);
-				}
-			}
-			prebuf = buffer[i];
-		}
-	}
-	buffer[i] = '\0';
-	remove_Hashtag(buffer);
+
+int isSpaceChar(char c, int index, char prebuff)
+{
+	return ((c == ' ' && index == 0) || (c == ' ' && prebuff == ' '));
+}
+
+/**
+ * resizeBuffer:  increasing buffer size.
+ * @buffer: The original buffer.
+ * @bufferSize: The current size of the buffer.
+ * @currentSize: Pointer to the current
+ *               size of the buffer.
+ * @return:  buffer(success).
+ */
+
+
+char *resizeBuffer(char *buffer, int *currentSize)
+{
+	*currentSize += BUFSIZE;
+	buffer = realloc(buffer, *currentSize + 2);
 	return (buffer);
 }
 
 /**
- * hashtag - checks for # comments
- * @buff: string to check
+ * hashtag - Removes hashtags from the buffer.
+ * @buff: The buffer containing the line.
+ *
  * Return: void
  */
+
 void remove_Hashtag(char *buff)
 {
 	int i = 1;
@@ -74,4 +76,56 @@ void remove_Hashtag(char *buff)
 			i++;
 		}
 	}
+}
+
+
+
+/**
+ *  _getLine: Reads a line of input
+ *           from the standard input.
+ *
+ * @return:  buffer(success).
+ */
+
+
+char *_getLine()
+{
+	char *buffer = NULL;
+	int i = 0, buffersize = BUFSIZE;
+	char c = 0, prebuff = '\0';
+
+	buffer = malloc(BUFSIZE);
+	if (!buffer)
+	{
+		free(buffer);
+		return (NULL);
+	}
+
+	for (; c != EOF && c != '\n'; i++)
+	{
+		c = ReadChar();
+		if (c == '\0')
+			break;
+
+		if (isSpaceChar(c, i, prebuff))
+			i--;
+		else
+		{
+			buffer[i] = c;
+			if (i >= buffersize)
+			{
+				
+				buffer = resizeBuffer(buffer, &buffersize);
+				if (!buffer)
+				{
+					free(buffer);
+					return (NULL);
+				}
+			}
+			prebuff = buffer[i];
+		}
+	}
+	buffer[i] = '\0';
+	remove_Hashtag(buffer);
+	return (buffer);
 }
