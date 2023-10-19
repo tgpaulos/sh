@@ -1,4 +1,4 @@
-#include "main.h"
+#include "shell.h"
 
 /**
  *_atoi - This function convert a string to an integer
@@ -7,17 +7,16 @@
  */
 
 int _atoi(char *s)
+
 {
+
+
 	int sign = 1;
 	int num = 0;
 	int i = 0;
 
 	while (s[i] != '\0')
 	{
-		while(str[i] == '')
-		{
-			i++;
-		}
 		if (s[i] == '-')
 		{
 			sign = -1;

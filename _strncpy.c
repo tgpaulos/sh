@@ -1,25 +1,21 @@
 #include "shell.h"
 
 /**
- * _strncpy - copy a string
- * @dest: first string
- * @src: second value
- * @n: max number of bytes
- * Return: dest
+ * _strcpy - a function that copies the string pointed to by src
+ * @dest: string to copy to
+ * @src: string copy from
+ * Return: string
  */
-char *_strncpy(char *dest, char *src, int n)
-{
-	int j = 0;
 
-	while (j < n && src[j] != '\0')
+char *_strcpy(char *dest, char *src)
+{
+	int i = 0;
+
+	while (src[i] != '\0')
 	{
-		dest[j] = src[j];
-		j++;
+		dest[i] = src[i];
+		i++;
 	}
-	while (j < n)
-	{
-		dest[j] = '\0';
-		j++;
-	}
+	dest[i] = '\0';
 	return (dest);
 }

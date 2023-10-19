@@ -10,6 +10,7 @@ char *_strdup(char *src)
 {
 	int length = 0;
 	char *p;
+	int i;
 
 	for (; src[length] != '\0'; length++)
 		;
@@ -18,10 +19,10 @@ char *_strdup(char *src)
 	if (!p)
 	{
 		free(p);
-		return NULL;
+		return (NULL);
 	}
 
-	for (int i = 0; i <= length; i++)
+	for (i = 0; i <= length; i++)
 		p[i] = src[i];
 
 	return (p);

@@ -1,8 +1,8 @@
 #include "shell.h"
 
 /**
- * _getenv - function to get environment variable
- * @param: argument
+ * _getenv - fun get environment
+ * @param: args
  * Return: value or NULL
  */
 
@@ -10,10 +10,11 @@ char *_getenv(char *param)
 {
 	size_t param_len, value_len;
 	char *value;
-	int i, j, k;
+	int i = 0, j, k;
 
 	param_len = _strlen(param);
-	i = 0;
+
+
 	while (environ[i])
 	{
 		if (_strncmp(param, environ[i], param_len) == 0)
@@ -28,12 +29,9 @@ char *_getenv(char *param)
 			}
 
 			j = 0;
-			k = param_len + 1;
-			while (environ[i][k])
+			for (k = param_len + 1; environ[i][k]; k++, j++)
 			{
 				value[j] = environ[i][k];
-				k++;
-				j++;
 			}
 			value[j] = '\0';
 

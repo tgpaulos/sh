@@ -1,67 +1,88 @@
 #include "shell.h"
 
+
+
 /**
- *_getline - read input from standard input
+ * _getLine - reads a line of input from stdin
  *
- *Return: the input on a buffer
+ * Return: Read line as a string
  */
 
-char *_getline()
+char *_getLine()
 {
-	int i, rd, buffsize = BUFSIZE;
-	char c = 0, *buffer, *buf;
+	char *buffer = NULL;
+	int i = 0, x = 0, bufferSize = BUFSIZ;
+	char c = 0, prevChar = '\0';
 
-	buffer = malloc(buffsize);
-	if (buffer == NULL)
+	buffer = malloc(BUFSIZ);
+	if (!buffer)
 	{
 		free(buffer);
 		return (NULL);
 	}
-	for (i = 0; c != EOF && c != '\n'; i++)
+
+	for (; c != EOF && c != '\n'; i++)
 	{
 		fflush(stdin);
-		rd = read(STDIN_FILENO, &c, 1);
-		if (rd == 0)
+		x = read(STDIN_FILENO, &c, 1);
+		if (x == 0)
 		{
 			free(buffer);
 			exit(EXIT_SUCCESS);
 		}
-		buffer[i] = c;
-		if (buffer[0] == '\n')
-			return (enter(buffer));
-		if (i >= buffsize)
+
+		if ((c == ' ' && i == 0) || (c == ' ' && prevChar == ' '))
 		{
-			buffer = realloc(buffer, (buffsize + 2));
-			if (buffer == NULL)
+			i--;
+		}
+		else
+		{
+			buffer[i] = c;
+			if (i >= bufferSize)
 			{
-				free(buffer);
-				return (NULL);
+				buffer = realloc(buffer, (bufferSize + 2));
+				if (!buffer)
+				{
+					free(buffer);
+					return (NULL);
+				}
+				bufferSize += 2;
 			}
+			prevChar = buffer[i];
 		}
 	}
+
 	buffer[i] = '\0';
-	hashtag(buffer);
+	remove_Hashtag(buffer);
 	return (buffer);
 }
 
-
-
-
 /**
- * hashtag_handler - checks for # from input
- * @buff: input string
+ * remove_Hashtag - removes # comments from the string
+ * @str: string to remove comments from
+ *
  * Return: void
  */
 
-void hashtag_handler(char *buff)
+void remove_Hashtag(char *str)
 {
-	int i;
+	int i = 1;
 
-	for (i = 0; buff[i] != '\0'; i++)
+	if (str[0] == '#')
 	{
-		if (buff[i] == '#' && buff[i - 1] == ' ' && buff[i + 1] == ' ')
+		str[0] = '\n';
+		return;
+	}
+	else
+	{
+		while (str[i])
 		{
-			buff[i] = '\0';
+			if (str[i] == '#' && str[i - 1] == ' ')
+			{
+				str[i] = '\0';
+				break;
+			}
+			i++;
 		}
 	}
 }

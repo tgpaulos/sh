@@ -1,14 +1,13 @@
-#include <stdlib.h>
 #include "shell.h"
 
 /**
-  * exit - exit shell with status
+  * exitsh - exit shell with status
   * @argv: input recived
-  * @cmd: command or input line
+  * @line: input command
   * Return: 0 or exit status
   */
 
-int exit(char *argv[], char *line)
+int exitsh(char *argv[], char *line)
 {
 	int exitStatus = 0;
 
