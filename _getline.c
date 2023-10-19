@@ -1,20 +1,18 @@
 #include "shell.h"
 
-
-
 /**
- * _getLine - reads a line of input from stdin
+ * _getline - gets string line from stdin file
  *
- * Return: Read line as a string
+ * Return: Read string with null pointer
  */
 
 char *_getLine()
 {
 	char *buffer = NULL;
-	int i = 0, x = 0, bufferSize = BUFSIZ;
-	char c = 0, prevChar = '\0';
+	int i = 0, x = 0, buffersize = BUFSIZE;
+	char c = 0, prebuf = '\0';
 
-	buffer = malloc(BUFSIZ);
+	buffer = malloc(BUFSIZE);
 	if (!buffer)
 	{
 		free(buffer);
@@ -31,57 +29,48 @@ char *_getLine()
 			exit(EXIT_SUCCESS);
 		}
 
-		if ((c == ' ' && i == 0) || (c == ' ' && prevChar == ' '))
-		{
+		if ((c == ' ' && i == 0) || (c == ' ' && prebuf == ' '))
 			i--;
-		}
 		else
 		{
 			buffer[i] = c;
-			if (i >= bufferSize)
+			if (i >= buffersize)
 			{
-				buffer = realloc(buffer, (bufferSize + 2));
+				buffer = realloc(buffer, (BUFSIZE + 2));
 				if (!buffer)
 				{
 					free(buffer);
 					return (NULL);
 				}
-				bufferSize += 2;
 			}
-			prevChar = buffer[i];
+			prebuf = buffer[i];
 		}
 	}
-
 	buffer[i] = '\0';
 	remove_Hashtag(buffer);
 	return (buffer);
 }
 
 /**
- * remove_Hashtag - removes # comments from the string
- * @str: string to remove comments from
- *
+ * hashtag - checks for # comments
+ * @buff: string to check
  * Return: void
  */
-
-void remove_Hashtag(char *str)
+void remove_Hashtag(char *buff)
 {
 	int i = 1;
 
-	if (str[0] == '#')
+	if (buff[0] == '#')
 	{
-		str[0] = '\n';
+		buff[0] = '\n';
 		return;
 	}
 	else
 	{
-		while (str[i])
+		while (buff[i])
 		{
-			if (str[i] == '#' && str[i - 1] == ' ')
-			{
-				str[i] = '\0';
-				break;
-			}
+			if (buff[i] == '#' && buff[i - 1] == ' ')
+				buff[i] = '\0';
 			i++;
 		}
 	}
